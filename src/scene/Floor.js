@@ -87,6 +87,7 @@ function buildSurroundingFence(scene) {
   function createFenceUnit() {
     const unit = new THREE.Group();
     const postGeo = new THREE.CylinderGeometry(0.05, 0.05, 1.3, 8);
+    
     const post1 = new THREE.Mesh(postGeo, woodMat);
     post1.position.set(-1, 0.65, 0);
     post1.castShadow = true;
@@ -107,14 +108,14 @@ function buildSurroundingFence(scene) {
     return unit;
   }
 
-  // أ) السور الخلفي
-  for (let x = -14; x <= 19; x += 2) {
+  // أ) السور الخلفي - مفتوح خلف الكراسي والمظلات (يبدأ من X = 0 إلى اليمين فقط)
+  for (let x = 0; x <= 19; x += 2) {
     const segment = createFenceUnit();
     segment.position.set(x, 0.0, -18.9);
     fenceGroup.add(segment);
   }
   
-  // ب) السور الجانبي الأيسر
+  // ب) السور الجانبي الأيسر - مغلق بالكامل لحماية طرف الرمل (من Z = -18 إلى 18)
   for (let z = -18; z <= 18; z += 2) {
     const segment = createFenceUnit();
     segment.rotation.y = Math.PI / 2;
@@ -122,13 +123,21 @@ function buildSurroundingFence(scene) {
     fenceGroup.add(segment);
   }
 
-  // ج) السور الجانبي الأيمن
+  // ج) السور الجانبي الأيمن - مغلق بالكامل لحماية طرف البحر (من Z = -18 إلى 18)
   for (let z = -18; z <= 18; z += 2) {
     const segment = createFenceUnit();
     segment.rotation.y = Math.PI / 2;
     segment.position.set(19.9, 0.0, z);
     fenceGroup.add(segment);
   }
+
+  // د) السور الأمامي المحدث 🆕 - تم تفعيله وإغلاقه بالكامل لحماية الحافة الأمامية المكشوفة (من X = -14 إلى 19)
+  for (let x = -14; x <= 19; x += 2) {
+    const segment = createFenceUnit();
+    segment.position.set(x, 0.0, 18.9); // تم وضعه على الحافة الأمامية المقابلة Z = 18.9
+    fenceGroup.add(segment);
+  }
+
   scene.add(fenceGroup);
 }
 function buildExtraFurniture(scene) {
